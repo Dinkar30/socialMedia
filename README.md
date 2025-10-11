@@ -1,1 +1,1 @@
-# this is a basic socialMedia kinda platform where a user can do all the basic operations. 
+## this is a basic socialMedia kinda platform where a user can do all the basic operations. 
