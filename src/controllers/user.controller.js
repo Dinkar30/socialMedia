@@ -7,7 +7,7 @@ import {APIresponse} from "../utils/APIresponse.js"
 
 const generateAccessAndRefreshToken = async (userid) => {
    try {
-     const user = User.findById(userid)
+     const user = await User.findById(userid)
      const accessToken = user.generateAccessToken(userid)
      const refreshToken = user.generaterefreshToken(userid)
      user.refreshToken = refreshToken
@@ -79,9 +79,33 @@ const loginUser = asyncHandler(async (req,res) => {
     
 })
 
+const logoutUser = asyncHandler(async (req,res) => {
+     await User.findByIdAndUpdate(req.user._id,
+           {
+            $set: {
+              refreshToken: undefined
+            }
+           },
+           {
+            new: true
+           }
+     )
+     const options = {
+      httpOnly: true,
+      secure: true
+     }
+
+     return res.status(201)
+     .clearCookie("accessToken",options)
+     .clearCookie("refreshToken", options)
+     .json(new APIresponse(201, {}, "user logged out"))
+})
+
+
 
 
 export {registerUser,
         loginUser,
-
+        logoutUser,
+        createPost
 }
