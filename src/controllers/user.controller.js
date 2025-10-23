@@ -3,6 +3,7 @@ import { APIerror } from "../utils/APIerror.js";
 import { User } from "../models/user.models.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import {APIresponse} from "../utils/APIresponse.js"
+import { Post } from "../models/post.model.js";
 
 
 const generateAccessAndRefreshToken = async (userid) => {
@@ -104,9 +105,61 @@ const logoutUser = asyncHandler(async (req,res) => {
      .json(new APIresponse(201, {}, "user logged out"))
 })
 
+const refreshAccessToken = asyncHandler(async (req,res) => {
+  // verifyJWT
+   const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken
+   
+})
 
+
+const changeCurrentPassword = asyncHandler(async (req,res) => {
+    const {oldPassword, newPassword} = req.body
+    const user = await User.findById(req.user?._id)
+
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+    if(!isPasswordCorrect) throw new APIerror(400 , "invalid old password")
+
+        user.password = newPassword
+        await user.save()
+
+    return res
+    .status(200)
+    .json(new APIresponse(200, "password changed successfully"))
+
+
+})
+
+const getCurrentUser = asyncHandler(async (req,res) => {
+    return res
+           .status(200)
+           .json(new APIresponse(200, req.user , "User fetched Successfully"))
+} )
+
+const getProfile = asyncHandler(async (req,res) => {
+       const {accountId } = req.params
+       const account = await User.findById(accountId).select('-password -refreshToken')
+       if(!account) throw new APIerror(404 , "user not found")
+       const posts = await Post.find({author: accountId})  
+                               .sort({createdAt: -1})
+                               .select('caption content ')    
+                               
+        const profile = {
+          user: account,
+          posts: posts,
+          postsCount: posts.length
+          
+        }
+
+      return res.status(200)
+                .json(new APIresponse(200 , profile , "fetched profile successfully"))
+
+})
 
 export {registerUser,
         loginUser,
         logoutUser,
+        changeCurrentPassword,
+        getCurrentUser,
+        getProfile,
+
 }

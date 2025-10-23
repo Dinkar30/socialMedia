@@ -31,7 +31,6 @@ const createPost = asyncHandler(async (req , res) => {
             .json(new APIresponse(201 , createdPost , "post created successfully"))
 })
 
-
 const likePost =asyncHandler(async (req, res) => {
     const {postId} = req.params
     if(!postId) throw new APIerror(400 , "post is missing")
@@ -73,7 +72,7 @@ const viewComments = asyncHandler(async (req,res) => {
      if(!post) throw new APIerror(400 , "no post found ")
      
     return res.status(200)
-              .json(new APIresponse(200 , "you can now view comments"))
+              .json(new APIresponse(200 ,{}, "you can now view comments"))
 })
 
 const getFeed = asyncHandler(async (req,res) => {
@@ -81,9 +80,50 @@ const getFeed = asyncHandler(async (req,res) => {
                             .sort({createdAt: -1})
                             .populate('author','username profilePic')
                             .populate('likes','username profilePic')
-                            .select('+comments')
     return res.status(200)
-              .json(new APIresponse(200 , posts , "presenting , your feed "))
+              .json(new APIresponse(200 , {posts} , "presenting , your feed "))
+})
+
+const deletePost = asyncHandler(async (req,res) => {
+    const {postId} = req.params
+    const post = await Post.findById(postId)
+    if(post.author?._id.toString() !== req.user._id.toString()) throw new APIerror(400 , "You are not authorized to delete the post")
+    else await Post.findByIdAndDelete(postId)   // 2 db calls , needs optimization 
+    
+    return res.status(200)
+              .APIresponse(200 ,{}, "deleted post successfully")    
+})
+
+const deleteComment = asyncHandler(async (req,res) => {
+    const {postId , commentId} = req.params
+    const post = await Post.findById(postId)
+    if(!post) throw new APIerror(400 , "No post found")
+    const comment =  post.comments.id(commentId)
+    
+    if(req.user._id.toString() !== post.author._id.toString() && req.user._id.toString() !== comment.user._id.toString()) 
+        throw new APIerror(400 , "You are not authorized to delete the comment")  // only post author and commentor can delete the comment
+    comment.remove()
+    await post.save();
+
+    return res.status(200)
+              .json(new APIresponse(400 , {}, "Comment has been deleted successfully"))
+})
+
+const getPost = asyncHandler(async (req,res) => {
+    const {postId} = req.params
+    if(!postId) throw new APIerror(404 , "Post id not found")
+    const post = await Post.findById(postId)
+                           .populate('author' , 'username profilePic')
+                           .populate('likes', 'username profilePic')
+                           .populate({
+                            path: 'comments.user',
+                            select: 'username profilePic'
+                           })
+
+    if(!post) throw new APIerror(404 , "post not found")
+    return res.status(200)
+              .json(new APIresponse(200 , post , "got The post successfully"))
+
 })
 
 
@@ -93,5 +133,9 @@ export {
     likePost,
     addComment,
     viewComments,
+    getFeed,
+    deletePost,
+    deleteComment,
+    
 
 }

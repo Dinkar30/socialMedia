@@ -24,6 +24,10 @@ const userSchema = new Schema({
     },
     profilePic: {
         type: String
+    },
+    bio: {
+        type: String,
+        required: false,
     }
 },{timestamps: true})
 
