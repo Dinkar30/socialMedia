@@ -128,6 +128,7 @@ const getPost = asyncHandler(async (req,res) => {
 
 
 
+
 export {
     createPost,
     likePost,
@@ -136,6 +137,7 @@ export {
     getFeed,
     deletePost,
     deleteComment,
+    getPost
     
 
 }

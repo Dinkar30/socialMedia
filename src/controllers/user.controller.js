@@ -1,50 +1,54 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { APIerror } from "../utils/APIerror.js";
-import { User } from "../models/user.models.js";
+import { User } from "../models/user.model.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import {APIresponse} from "../utils/APIresponse.js"
 import { Post } from "../models/post.model.js";
+import jwt, { decode } from 'jsonwebtoken';
 
 
 const generateAccessAndRefreshToken = async (userid) => {
    try {
      const user = await User.findById(userid)
-     const accessToken = user.generateAccessToken(userid)
-     const refreshToken = user.generaterefreshToken(userid)
+     const accessToken = user.generateAccessToken()
+     const refreshToken = user.generateRefreshToken()
      user.refreshToken = refreshToken
-     await user.save()
+     await user.save({ validateBeforeSave: false})
 
      return {accessToken, refreshToken}
 
    } catch (error) {
-    throw new APIerror(500 , "something went wrong while generating refresh and access token")
-   }
+    console.log("error in generating tokens", error)
+  }
 }
 
 
 
 const registerUser = asyncHandler(async (req,res) => {
-     const {username , email , password } = req.body
-     if(!username || !email || !password) throw new APIerror(400 , "All fields are mandatory")
-      const userExists = await User.findOne({
+      const {username , email ,  password} =  req.body
+    
+
+    if( [username, email ,  password].some((field) => field?.trim() === "")){
+        throw new APIerror(400, "All fields are required");
+    }
+     const userExists = await User.findOne({
         $or: [{email,username}]
       })
      if(userExists) throw new APIerror(400 , "a user already exists with this email / username")
      const profilePictureLocalPath = req.file?.path
+    
      if(!profilePictureLocalPath) throw new APIerror(401 , "profile picture not uploaded")
      const profilePic = await uploadToCloudinary(profilePictureLocalPath)
-    if(!profilePic) throw new APIerror(401 , "profile picture could not be uploaded")
+    if(!profilePic) throw new APIerror(500 , "profile picture could not be uploaded")
 
-      
     const user = await User.create({
-        username,
-        email,
-        password,
+        username: username,
+        email: email,
+        password: password,
         profilePic: profilePic.url
     })
-
     const userCreated = await User.findById(user._id)
-                                  .select("-password -refreshToken")
+                                  .select("-password ")
   
   return res
   .status(201)
@@ -52,15 +56,24 @@ const registerUser = asyncHandler(async (req,res) => {
 })
 
 const loginUser = asyncHandler(async (req,res) => {
-    const {username , email , password} = req.body
+  
+    const {  username , email , password } = req.body ;
     if(!(username || email)) throw new APIerror(400 , "atleast enter username or email")
     const user = await User.findOne({
-  $or: [{email},{password}]
-}) 
+       $or: [{username}, {email}]
+    }) 
  if(!user) throw new APIerror(400 , "user doesn't exist , register first")
 
-  const isPasswordValid = user.isPasswordCorrect(password)
+  const isPasswordValid = await user.isPasswordCorrect(password)
+  console.log(password);
+  console.log(isPasswordValid);
+  console.log(user.password);
+  console.log(user._id)
+  
+  
   if(!isPasswordValid) throw new APIerror(400, "Invalid user credentials")
+    console.log(generateAccessAndRefreshToken(user._id));
+    
     const {accessToken, refreshToken} =  await generateAccessAndRefreshToken(user._id)
     const loggedinUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -108,9 +121,26 @@ const logoutUser = asyncHandler(async (req,res) => {
 const refreshAccessToken = asyncHandler(async (req,res) => {
   // verifyJWT
    const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken
+   if(!incomingRefreshToken) throw new APIerror(401 , "Unauthorized request")
+    const decodedToken = jwt.verify(incomingRefreshToken , process.env.REFRESH_TOKEN_SECRET)
+  const user = User.findById(decodedToken._id)
+  if(!user) throw new APIerror(400 , "Invalid refresh token")
+    if(incomingRefreshToken !== user.refreshToken) throw new APIerror(401 , "refresh token expired")
+      const {newAccessToken , newRefreshToken} = User.generateAccessAndRefreshToken(user._id)
+    const options = {
+      httpOnly: true,
+      secure: true
+    }
+
+    return res.status(200)
+    .cookie("accessToken",newAccessToken,options)
+    .cookie("refreshToken",newRefreshToken,options)
+    .json(new APIresponse(200 , {
+       accessToken: newAccessToken,
+       refreshToken: newRefreshToken
+    }, "refreshed the access token successfully"))
    
 })
-
 
 const changeCurrentPassword = asyncHandler(async (req,res) => {
     const {oldPassword, newPassword} = req.body
@@ -147,12 +177,36 @@ const getProfile = asyncHandler(async (req,res) => {
           user: account,
           posts: posts,
           postsCount: posts.length
-          
         }
 
       return res.status(200)
                 .json(new APIresponse(200 , profile , "fetched profile successfully"))
 
+})
+
+const updateUserProfile = asyncHandler(async (req,res) => {
+      const {username , email} = req.body
+      if(!email || !fullname) throw new APIerror(400 , "please select atleast one field to update")
+      const user = User.findByIdAndUpdate(req.user._id, 
+                   { $set: {fullname , email} } ,
+                        { new: true}
+      ).select('-password')
+
+    return res.status(200)
+              .json(new APIresponse(400 , user , "account details updated successfully"))
+})
+
+const changeProfilePic = asyncHandler(async (req,res) => {
+     const profilePictureLocalPath = req.file?.path
+     if(!profilePictureLocalPath) throw new APIerror(400 , "avatar file is missing")
+      const profilePic = await uploadToCloudinary(profilePictureLocalPath)
+     if(!profilePic) throw new APIerror(400 , "error while updating the profile picture")
+      const user = await User.findByIdAndUpdate(req.user._id, 
+                                    {$set: {profilePic: profilePic.url}},
+                                    {new: true}
+       )
+       return res.status(200)
+                  .json(new APIresponse(200 , user, "changed profile pic successfully"))
 })
 
 export {registerUser,
@@ -161,5 +215,8 @@ export {registerUser,
         changeCurrentPassword,
         getCurrentUser,
         getProfile,
+        updateUserProfile,
+        changeProfilePic,
+        refreshAccessToken
 
 }

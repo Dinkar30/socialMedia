@@ -17,6 +17,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
+        trim: true,
         required: [true,"password required"]
     },
     refreshToken: {
@@ -24,32 +25,36 @@ const userSchema = new Schema({
     },
     profilePic: {
         type: String
-    },
-    bio: {
-        type: String,
-        required: false,
     }
 },{timestamps: true})
 
 
-userSchema.pre()
+userSchema.pre("save", async function (next) {
+    if(!this.isModified("password")) return next();
+    console.log(this.password);
+    
+    this.password = await bcrypt.hash(this.password , 12);
+        console.log(this.password);
+
+    next(); 
+ })
 
 userSchema.methods.isPasswordCorrect = async function(password) {
   return await bcrypt.compare(password , this.password) 
 }
 
 
-userSchema.methods.generateAccessToken = function(userid) {
+userSchema.methods.generateAccessToken = function() {
     return  jwt.sign(
-        {userid},
+        {_id: this._id},
         process.env.ACCESS_TOKEN_SECRET,
         {expiresIn: process.env.ACCESS_TOKEN_EXPIRY}
     )
 }
 
-userSchema.methods.generateRefreshToken = function(userid) {
+userSchema.methods.generateRefreshToken = function() {
     return  jwt.sign(
-        {userid},
+        {_id: this._id},
         process.env.REFRESH_TOKEN_SECRET,
         {expiresIn: process.env.REFRESH_TOKEN_EXPIRY}
     )
