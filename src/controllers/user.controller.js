@@ -119,7 +119,7 @@ const logoutUser = asyncHandler(async (req,res) => {
 })
 
 const refreshAccessToken = asyncHandler(async (req,res) => {
-  // verifyJWT
+  
    const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken
    if(!incomingRefreshToken) throw new APIerror(401 , "Unauthorized request")
     const decodedToken = jwt.verify(incomingRefreshToken , process.env.REFRESH_TOKEN_SECRET)
@@ -186,14 +186,14 @@ const getProfile = asyncHandler(async (req,res) => {
 
 const updateUserProfile = asyncHandler(async (req,res) => {
       const {username , email} = req.body
-      if(!email || !fullname) throw new APIerror(400 , "please select atleast one field to update")
-      const user = User.findByIdAndUpdate(req.user._id, 
-                   { $set: {fullname , email} } ,
+      if(!(email || username)) throw new APIerror(400 , "please select atleast one field to update")
+      const user = await User.findByIdAndUpdate(req.user._id, 
+                   { $set: {username , email} } ,
                         { new: true}
       ).select('-password')
 
     return res.status(200)
-              .json(new APIresponse(400 , user , "account details updated successfully"))
+              .json(new APIresponse(200 , user , "account details updated successfully"))
 })
 
 const changeProfilePic = asyncHandler(async (req,res) => {
