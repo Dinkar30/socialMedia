@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import Login from './pages/login.jsx'
+import SignUp from './pages/Signup.jsx'
 
 function App() { 
 
@@ -8,9 +10,9 @@ function App() {
     <>
      <BrowserRouter>
      <Routes>
-      <Route>
-        
-      </Route>
+      <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
      </Routes>
      </BrowserRouter>
     </>

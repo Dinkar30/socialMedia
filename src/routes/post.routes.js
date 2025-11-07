@@ -20,4 +20,4 @@ router.route("/get-post:postId").get(verifyJWT , getPost)
 
 
 
-export default postRouter
+export default router

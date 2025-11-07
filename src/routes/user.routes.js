@@ -35,4 +35,4 @@ router.route('/refresh-access-token').patch(refreshAccessToken)
 
 
 
-export default userRouter
+export default router

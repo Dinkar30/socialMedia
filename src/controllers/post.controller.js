@@ -1,8 +1,8 @@
-import { Post } from "../models/post.model";
-import { APIerror } from "../utils/APIerror";
-import { APIresponse } from "../utils/APIresponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { uploadToCloudinary } from "../utils/cloudinary";
+import { Post } from "../models/post.model.js";
+import { APIerror } from "../utils/APIerror.js";
+import { APIresponse } from "../utils/APIresponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const createPost = asyncHandler(async (req , res) => {
     // import image from req.files / frontend
