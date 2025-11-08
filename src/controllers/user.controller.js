@@ -65,10 +65,10 @@ const loginUser = asyncHandler(async (req,res) => {
  if(!user) throw new APIerror(400 , "user doesn't exist , register first")
 
   const isPasswordValid = await user.isPasswordCorrect(password)
-  console.log(password);
-  console.log(isPasswordValid);
-  console.log(user.password);
-  console.log(user._id)
+  // console.log(password);
+  // console.log(isPasswordValid);
+  // console.log(user.password);
+  // console.log(user._id)
   
   
   if(!isPasswordValid) throw new APIerror(400, "Invalid user credentials")
@@ -123,10 +123,10 @@ const refreshAccessToken = asyncHandler(async (req,res) => {
    const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken
    if(!incomingRefreshToken) throw new APIerror(401 , "Unauthorized request")
     const decodedToken = jwt.verify(incomingRefreshToken , process.env.REFRESH_TOKEN_SECRET)
-  const user = User.findById(decodedToken._id)
+  const user = await User.findById(decodedToken._id)
   if(!user) throw new APIerror(400 , "Invalid refresh token")
     if(incomingRefreshToken !== user.refreshToken) throw new APIerror(401 , "refresh token expired")
-      const {newAccessToken , newRefreshToken} = User.generateAccessAndRefreshToken(user._id)
+      const {newAccessToken , newRefreshToken} = await generateAccessAndRefreshToken(user._id)
     const options = {
       httpOnly: true,
       secure: true

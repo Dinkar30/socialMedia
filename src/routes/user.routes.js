@@ -27,7 +27,7 @@ router.route("/get-current-user").get(verifyJWT , getCurrentUser)
 router.route('/get-profile:accountId').get(verifyJWT,getProfile)
 router.route('/update-user-profile').patch(verifyJWT,updateUserProfile)
 router.route('/change-profile-pic').patch(verifyJWT,upload.single("profilePic"),changeProfilePic)
-router.route('/refresh-access-token').patch(refreshAccessToken)
+router.route('/refresh-access-token').patch(verifyJWT, refreshAccessToken)
 
 
 
