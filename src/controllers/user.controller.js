@@ -166,12 +166,13 @@ const getCurrentUser = asyncHandler(async (req,res) => {
 } )
 
 const getProfile = asyncHandler(async (req,res) => {
-       const {accountId } = req.params
-       const account = await User.findById(accountId).select('-password -refreshToken')
+       const {username } = req.params
+       const account = await User.findOne({username}).select('-password -refreshToken')
        if(!account) throw new APIerror(404 , "user not found")
-       const posts = await Post.find({author: accountId})  
+       const posts = await Post.find({author: account._id})  
                                .sort({createdAt: -1})
-                               .select('caption content ')    
+                               .select('caption content createdAt')
+                               .populate('author', 'username avatar')    
                                
         const profile = {
           user: account,
