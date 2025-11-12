@@ -43,9 +43,10 @@ const likePost =asyncHandler(async (req, res) => {
     await post.save()
 
     return res.status(201)
-              .json(new APIresponse(400 , post , "Liked post successfully"))
+              .json(new APIresponse(200 , post , "Liked post successfully"))
 
 })
+
 
 const addComment = asyncHandler(async (req,res) => {
     const {postId} = req.params
@@ -72,7 +73,7 @@ const viewComments = asyncHandler(async (req,res) => {
      if(!post) throw new APIerror(400 , "no post found ")
      
     return res.status(200)
-              .json(new APIresponse(200 ,{}, "you can now view comments"))
+              .json(new APIresponse(200 ,{post}, "you can now view comments"))
 })
 
 const getFeed = asyncHandler(async (req,res) => {

@@ -8,7 +8,7 @@ function Feed () {
     const fetchPosts = async () => {
         try {
             const response = await api.get('/posts/feed')
-            // console.log(response.data.data.posts);
+            console.log(response.data.data);
             
             setPosts(response.data.data.posts)
             
@@ -19,13 +19,14 @@ function Feed () {
     }
     fetchPosts()
    }, [])
-
+    
    return (
      <>
       {posts.map((post) => (
         <div key={post._id}>
             <h3>{post.author.username}</h3>
             <img src={post.content} alt="" />
+            
             <p>{post.caption}</p>
             
         </div>

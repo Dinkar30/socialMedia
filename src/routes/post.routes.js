@@ -16,13 +16,13 @@ import { upload } from "../middlewares/multer.middleware.js";
 const router = Router()
 
 router.route("/create-post").post(verifyJWT,upload.single("content"), createPost)
-router.route("/like-post").post(verifyJWT , likePost)
+router.route("/like-post/:postId").post(verifyJWT , likePost)
 router.route("/add-comment").post(verifyJWT , addComment)
-router.route("/view-comments:postId").get(viewComments)
+router.route("/view-comments/:postId").get(viewComments)
 router.route("/feed").get( getFeed)
-router.route("/delete-post:postId").patch(verifyJWT , deletePost)
+router.route("/delete-post/:postId").patch(verifyJWT , deletePost)
 router.route("/:postId/delete-comment/:commentId").post(verifyJWT , addComment)
-router.route("/get-post:postId").get(verifyJWT , getPost)
+router.route("/get-post/:postId").get(verifyJWT , getPost)
 
 
 

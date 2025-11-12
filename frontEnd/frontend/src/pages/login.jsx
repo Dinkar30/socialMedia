@@ -18,6 +18,7 @@ function Login() {
        console.log('Login successful:', response.data)
        localStorage.setItem('accessToken', response.data.data.accessToken)
        localStorage.setItem('refreshToken', response.data.data.refreshToken)
+       localStorage.setItem('userId',response.data.data.user._id )
        alert('Login successful!')
 
     } catch (error) {
