@@ -22,7 +22,7 @@ const postSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "User"
             },
-            texts: {
+            text: {
                 type: String,
                 required: true
             },

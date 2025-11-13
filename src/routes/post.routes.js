@@ -17,7 +17,7 @@ const router = Router()
 
 router.route("/create-post").post(verifyJWT,upload.single("content"), createPost)
 router.route("/like-post/:postId").post(verifyJWT , likePost)
-router.route("/add-comment").post(verifyJWT , addComment)
+router.route("/add-comment/:postId").post(verifyJWT , addComment)
 router.route("/view-comments/:postId").get(viewComments)
 router.route("/feed").get( getFeed)
 router.route("/delete-post/:postId").patch(verifyJWT , deletePost)

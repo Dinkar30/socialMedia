@@ -50,20 +50,21 @@ const likePost =asyncHandler(async (req, res) => {
 
 const addComment = asyncHandler(async (req,res) => {
     const {postId} = req.params
-    const {texts} = req.body
+    const {text} = req.body
+    if(!text) throw new APIerror(400 , "enter something to comment")
     if(!postId) throw new APIerror(400 , "post is missing")
-    if(!texts) throw new APIerror(400 , "Enter something to comment")
+    if(!text) throw new APIerror(400 , "Enter something to comment")
     const userId = req.user._id
     const post = await Post.findById(postId)
     if(!post) throw new APIerror(400 , "post is missing")
     post.comments.push({
         user: userId,
-        text: texts,
+        text: text,
     })
     await post.save()
 
     return res.status(201)
-              .json(new APIresponse(400 ,post ,"comment added successfully"))
+              .json(new APIresponse(201 ,post ,"comment added successfully"))
 })
 
 const viewComments = asyncHandler(async (req,res) => {
