@@ -7,8 +7,10 @@ function Navbar () {
   return (
     <>
     <img src="" alt="logo" onClick={() => navigate('/feed')} />
+    
     <button onClick={() => navigate('/create-post')}>Create post</button>
     <img src="" alt="userprofilepic" onClick={() => navigate('/user-profile')}/>
+
      
     </>
   )

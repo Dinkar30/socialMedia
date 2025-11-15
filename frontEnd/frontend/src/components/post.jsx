@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import api from "../utils/api.js";
 import { useParams } from "react-router-dom";
 
+
+
+function getRandomNumber() {
+  return Math.floor(Math.random() * 17); 
+}
+
 function Post() {
     const [post , setPost] = useState(null)
     const {postId} = useParams()
@@ -28,7 +34,7 @@ const [comment, setComment] = useState('');
             })
             setPost((prev) => ({
                 ...prev,
-                comments: [...prev.comments, response.data.data.comments.textslice(-1)[0]]
+                comments: [...prev.comments, response.data.data.comments.slice(-1)[0]]
             }))
             console.log(response);
             setComment('')
@@ -59,8 +65,34 @@ const [comment, setComment] = useState('');
         fetchPosts()
     },[postId])
 
+    const loadingQuotes = [
+  "meanwhile , why're you so sweet...",
+  "Hold on…",
+  "Motivation not found...",
+  "Loading… because teleportation isn’t ready yet...",
+  "Snoozing rn...",
+  "Reticulating splines… whatever that means...",
+  "Hey there !!",
+  "servers sleeping...",
+  "Get your coffee while We bring the good stuff...",
+  "Slow and steady… like Monday mornings...",
+  "Aa raha hu....",
+  "Wakey wakey...",
+  "we blame internet for this...",
+  "Pretending to load...",
+  "Yo yo yo...",
+  "will load till dawn...",
+  "Patience test..."
+]
+
     if (loading) {
-        return <div className="p-4 text-center">Loading...</div>;
+       return (
+  <div className="flex items-center justify-center h-screen w-screen px-4">
+    <p className="text-3xl font-semibold text-gray-800 text-center">
+      {loadingQuotes[getRandomNumber()]}
+    </p>
+  </div>
+);
     }
 
 
