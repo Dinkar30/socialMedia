@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../utils/api.js";
+import Navbar from "../components/navbar.jsx";
+
 function UserProfile () {
     const [profile , setProfile] = useState(null)
     const {username} = useParams()
@@ -36,6 +38,7 @@ function UserProfile () {
      return (
         
        <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
+        <Navbar/>
             <div className="max-w-4xl mx-auto">
                 
                 <div className="bg-gray-800 p-6 md:p-10 rounded-xl shadow-2xl flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8 mb-10">

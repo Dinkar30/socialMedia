@@ -26,17 +26,33 @@ function CreatePost () {
     }
 
   return (
-    <form onSubmit={handleClick}>
-      <input type="text"
-             placeholder="enter caption"
-             value={caption}
-             onChange={(e) => setCaption(e.target.value)}
+    <div className="bg-gray-900 min-h-screen w-full">
+    <form 
+      onSubmit={handleClick} 
+      className="max-w-md mx-auto bg-gray-900 p-6 rounded-xl shadow-lg flex flex-col gap-4"
+    >
+      <input 
+        type="text"
+        placeholder="enter caption"
+        value={caption}
+        onChange={(e) => setCaption(e.target.value)}
+        className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-green-600"
       />
-      <input type="file"
-             onChange={(e) => setContent(e.target.files[0])}
-        />
-        <button type="submit">Post</button>
+
+      <input 
+        type="file"
+        onChange={(e) => setContent(e.target.files[0])}
+        className="w-full p-3 rounded-lg bg-gray-800 text-white file:bg-gray-700 file:text-white file:border-none file:px-3 file:py-2"
+      />
+
+      <button 
+        type="submit"
+        className="w-full p-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 hover:scale-[1.02] transition"
+      >
+        Post
+      </button>
     </form>
+    </div>
 
   )
 }

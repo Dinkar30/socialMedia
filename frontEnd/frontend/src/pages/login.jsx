@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import api from "../utils/api.js";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Login() {
    const [id , setId] = useState('')
    const [password , setPassword] = useState('')
-
+   const navigate = useNavigate()
    const handleClick = async (e) => {
     e.preventDefault()
 
@@ -20,6 +21,7 @@ function Login() {
        localStorage.setItem('refreshToken', response.data.data.refreshToken)
        localStorage.setItem('userId',response.data.data.user._id )
        alert('Login successful!')
+       navigate('/feed')
 
     } catch (error) {
         console.error('Login error:', error)
@@ -59,6 +61,7 @@ function Login() {
             <button 
                 type="submit" 
                 className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                 
             >
                 Log In
             </button>

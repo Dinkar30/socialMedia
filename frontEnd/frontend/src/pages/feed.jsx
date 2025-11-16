@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api.js";
+import Navbar from "../components/navbar.jsx";
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 17);
@@ -92,6 +93,7 @@ function Feed() {
 
   return (
     <div className="bg-gray-900 min-h-screen w-full">
+      <Navbar/>
     <div className="max-w-4xl mx-auto p-4 bg-gray-900">
       {posts.map((post, index) => (
         <div 
