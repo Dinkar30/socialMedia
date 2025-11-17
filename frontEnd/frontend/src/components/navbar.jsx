@@ -15,10 +15,10 @@ function Navbar() {
       localStorage.removeItem("refreshToken")
       localStorage.removeItem("userId")
       localStorage.removeItem("username")
-    } catch (error) {
-      console.error(error);
       alert(`logged out successfully`);
       navigate('/login')
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -38,7 +38,7 @@ function Navbar() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate("/feed")}
         >
-          {/* <img src='/logo.png' alt="" className="w-10 h-10 object-contain" /> */}
+          {/* <img src='/public/temp/logo.png' alt="" className="w-10 h-10 object-contain" /> */}
           <h1 className="text-xl font-bold ">Wyre</h1>
         </div>
 

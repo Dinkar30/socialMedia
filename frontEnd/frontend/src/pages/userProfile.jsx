@@ -3,16 +3,13 @@ import { useParams } from "react-router-dom";
 import api from "../utils/api.js";
 import Navbar from "../components/navbar.jsx";
 import { useNavigate } from "react-router-dom";
-
-// const navigate = useNavigate();
-function getRandomNumber() {
-  return Math.floor(Math.random() * 17);
-}  
+ 
 
 function UserProfile () {
     const [profile , setProfile] = useState(null)
     const {username} = useParams()
     const [loading,setLoading] = useState(true)
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(!username) return;
@@ -34,31 +31,23 @@ function UserProfile () {
 
     },[username])
 
-     const loadingQuotes = [
-    "meanwhile, why're you so sweet...",
-    "Hold on…",
-    "Motivation not found...",
-    "Loading… because teleportation isn't ready yet...",
-    "Snoozing rn...",
-    "Reticulating splines… whatever that means...",
-    "Hey there !!",
-    "servers sleeping...",
-    "Get your coffee while We bring the good stuff...",
-    "Slow and steady… like Monday mornings...",
-    "Aa raha hu....",
-    "Wakey wakey...",
-    "we blame internet for this...",
-    "Pretending to load...",
-    "Yo yo yo...",
-    "will load till dawn...",
-    "Patience test..."
-  ]
 
+    const handlePostClick = (postId) => {
+    navigate(`/post/${postId}`)
+  }
+
+    const handleProfilePicClick = async () => {
+        
+    }
+
+
+
+    
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen w-screen px-4">
         <p className="text-3xl font-semibold text-gray-800 text-center">
-          {loadingQuotes[getRandomNumber()]}
+          Loading...
         </p>
       </div>
     );
@@ -79,6 +68,7 @@ function UserProfile () {
                         src={profile.user.profilePic } 
                         alt={`${profile.user.username}'s missing`} 
                         className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg"
+                        onClick={() => handleProfilePicClick()}
                     />
                     
                     <div className="text-center md:text-left">
@@ -110,7 +100,7 @@ function UserProfile () {
                             <div 
                                 key={post._id} 
                                 className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1 cursor-pointer"
-                            
+                                onClick={() => handlePostClick(post._id)}
                             >
                                  {post.content && (
                                     <img 

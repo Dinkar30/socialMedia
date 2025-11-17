@@ -31,6 +31,10 @@ function Login() {
     
    }
 
+   const handleSignUp = async () => {
+    navigate('/signup')
+   }
+
    const inputClasses = "w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out placeholder-gray-400"
 
    return (
@@ -66,6 +70,10 @@ function Login() {
             >
                 Log In
             </button>
+            <p className="py-3 px-4 text-white font-semibold shadow-lg "> got no account</p>
+            <button 
+                   className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out cursor-pointer"
+                   onClick={handleSignUp}>signup</button>
         </form>
     </div>
    )
