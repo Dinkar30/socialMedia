@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api.js";
 import Navbar from "../components/navbar.jsx";
 
+
 function getRandomNumber() {
   return Math.floor(Math.random() * 17);
 }
@@ -34,7 +35,7 @@ function Feed() {
       }
     }
     fetchPosts()
-  }, [])
+  }, [currentUserId])
 
   const handleLike = async (postId, index) => {
     try {

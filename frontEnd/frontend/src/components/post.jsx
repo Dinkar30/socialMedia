@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../utils/api.js";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./navbar.jsx";
-
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 17); 
@@ -101,8 +100,9 @@ const [comment, setComment] = useState('');
     }
 
   return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Navbar/>
       <div className="min-h-screen bg-gray-900 text-white p-4 md:p-10 flex justify-center">
-        <Navbar/>
   <div className="max-w-4xl w-full bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
     <div className="p-4 flex items-center space-x-4 border-b border-gray-700">
       <img
@@ -207,6 +207,7 @@ const [comment, setComment] = useState('');
       </div>
     </div>
   </div>
+</div>
 </div>
 
   )

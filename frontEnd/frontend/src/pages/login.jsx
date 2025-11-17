@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../utils/api.js";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 function Login() {
    const [id , setId] = useState('')
@@ -20,6 +20,7 @@ function Login() {
        localStorage.setItem('accessToken', response.data.data.accessToken)
        localStorage.setItem('refreshToken', response.data.data.refreshToken)
        localStorage.setItem('userId',response.data.data.user._id )
+       localStorage.setItem('username',response.data.data.user.username)
        alert('Login successful!')
        navigate('/feed')
 
@@ -60,7 +61,7 @@ function Login() {
             
             <button 
                 type="submit" 
-                className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out cursor-pointer"
                  
             >
                 Log In

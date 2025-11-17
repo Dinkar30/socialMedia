@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import api from "../utils/api.js";
 function Navbar() {
   const navigate = useNavigate();
   const [searchId, setSearchId] = useState("");
-  const userId = localStorage.getItem("userId");
+  const username = localStorage.getItem("username");
 
   const handleLogout = async () => {
     try {
       const response = await api.post("/users/logout");
       console.log(response);
       alert("loggedOut successfully");
-      localStorage.setItem("accessToken", undefined);
-      localStorage.setItem("refreshToken", undefined);
-      localStorage.setItem("userId", undefined);
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("userId")
+      localStorage.removeItem("username")
     } catch (error) {
       console.error(error);
       alert(`logged out successfully`);
@@ -36,8 +38,8 @@ function Navbar() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate("/feed")}
         >
-          <img src='/logo.png' alt="logo" className="w-10 h-10 object-contain" />
-          <h1 className="text-lg font-semibold">Wyre</h1>
+          {/* <img src='/logo.png' alt="" className="w-10 h-10 object-contain" /> */}
+          <h1 className="text-xl font-bold ">Wyre</h1>
         </div>
 
         <form onSubmit={handleSearch} className="flex items-center gap-2 w-full max-w-md">
@@ -59,16 +61,16 @@ function Navbar() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/create-post")}
-            className="bg-gray-800 px-4 py-2 rounded-md hover:bg-gray-700 text-sm"
+            className="bg-gray-800 px-4 py-2 rounded-md hover:bg-gray-700 text-sm cursor-pointer"
           >
             Create Post
           </button>
 
           <button
-            onClick={() => navigate(`/profile/${userId}`)}
+            onClick={() => navigate(`/profile/${username}`)}
             className="bg-gray-800 px-4 py-2 rounded-md hover:bg-gray-700 text-sm cursor-pointer"
           >
-            {userId}
+            {username}
           </button>
 
           <button
