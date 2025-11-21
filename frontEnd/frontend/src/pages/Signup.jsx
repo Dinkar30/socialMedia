@@ -76,7 +76,7 @@ function SignUp () {
                 />
                 <div>
                     <label htmlFor="profilePic" className="block text-sm font-medium text-gray-400 mb-2">
-                        Profile Picture (Optional)
+                        Profile Picture
                     </label>
                     <input 
                         id="profilePic"
