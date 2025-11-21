@@ -16,7 +16,7 @@ function CreatePost () {
             const response = await api.post('/posts/create-post', formData, {
                 headers: {'Content-Type': 'multipart/form-data'}
             })
-            alert('post created successfully')
+            // alert('post created successfully')
             setCaption('')
             setContent(null)
         } catch (error) {

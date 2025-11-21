@@ -21,7 +21,7 @@ function Login() {
        localStorage.setItem('refreshToken', response.data.data.refreshToken)
        localStorage.setItem('userId',response.data.data.user._id )
        localStorage.setItem('username',response.data.data.user.username)
-       alert('Login successful!')
+    //    alert('Login successful!')
        navigate('/feed')
 
     } catch (error) {

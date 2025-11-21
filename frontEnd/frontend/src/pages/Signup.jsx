@@ -25,7 +25,7 @@ function SignUp () {
             })
             
             console.log('Sign up successful:', response.data)
-            alert('Sign up successful!')
+            // alert('Sign up successful!')
             
         } catch (error) {
             console.error(error)
