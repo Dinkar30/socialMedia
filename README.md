@@ -150,7 +150,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Dinkar Pathak**
 - GitHub: [@Dinkar30](https://github.com/Dinkar30)
 - Email: dkcan00@gmail.com
 
