@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://16.192.94.81/social',
+    baseURL: 'https://gatewayconsole.duckdns.org/social',
     withCredentials: true,
     headers: {
         'X-API-KEY': import.meta.env.API_KEY
